@@ -17,7 +17,7 @@ public class MagicSquare {
 		square = new int[dimension][dimension];
 	}
 	
-	public int inputDimension() throws IOException {
+	public static int inputDimension() throws IOException {
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		System.out.print("Enter odd-numbered dimension for Magic Square: ");
 		int dimension = new Integer(input.readLine());
@@ -30,8 +30,21 @@ public class MagicSquare {
 		return dimension;
 	}
 	
+	public String toString() {
+		String output = "";
+		for (int row=0; row<this.square.length; row++) {
+			for (int col=0; col<this.square[row].length; col++) {
+				output+=this.square[row][col];
+				output+=" ";
+			}
+			output+="\n";
+		}
+		return output;
+		
+	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException{
+		MagicSquare square1 = new MagicSquare(MagicSquare.inputDimension());
 		
 	}
 
