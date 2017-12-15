@@ -43,9 +43,34 @@ public class MagicSquare {
 		
 	}
 	
+	public void populateSquare() {
+		int currentRow = 0;
+		int currentCol = this.square.length/2;
+		
+		for (int target = 1; target<=this.square.length*this.square.length; target++) {
+			this.insertNumber(target, currentRow, currentCol);
+			
+			currentRow-=1;
+			currentCol+=1;
+			if (currentRow<0) {
+				currentRow = this.square.length-1;
+			}
+			if (currentCol>(this.square.length-1)) {
+				currentCol = 0;
+			}
+		}
+		
+		
+	}
+	
+	public void insertNumber(int target, int row, int col) {
+		this.square[row][col] = target;
+	}
+	
 	public static void main(String[] args) throws IOException{
 		MagicSquare square1 = new MagicSquare(MagicSquare.inputDimension());
 		
+		System.out.println(square1);
 	}
 
 }
