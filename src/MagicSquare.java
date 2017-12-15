@@ -74,13 +74,6 @@ public class MagicSquare {
 		this.square[row][col] = target;
 	}
 	
-	public static void main(String[] args) throws IOException{
-		MagicSquare square1 = new MagicSquare(MagicSquare.inputDimension());
-		square1.populateSquare();
-		
-		System.out.println(square1);
-	}
-	
 	public int checkRows() {
 		int[] rowSums = new int[this.square.length];
 		for (int row = 0; row < this.square.length; row++) {
@@ -95,7 +88,7 @@ public class MagicSquare {
 		}
 		return rowSums[0];
 	}
-	
+
 	public int checkCols() {
 		int[] colSums = new int[this.square.length];
 		for (int col = 0; col < this.square.length; col++) {
@@ -109,5 +102,37 @@ public class MagicSquare {
 			}
 		}
 		return colSums[0];
+	}
+
+	public int checkDiagonals() {
+		int[] diagSums = new int[2];
+		int left = 0; //zero means false, i.e. diagonal is right.
+		
+		for (int i = 0, row = 0, col = 0; i < this.square.length; i++, row++, col++) {
+			diagSums[(int)left] += this.square[row][col];
+		}
+		
+		left++; //set left to true, i.e. diagonal is left.
+		
+		for (int i = this.square.length-1, row = i, col = i; i >= 0; i--, row--, col--) {
+			diagSums[(int)left] += this.square[row][col];
+		}
+		
+		if (diagSums[0]==diagSums[1]) {
+			return diagSums[0];
+		}
+		else {
+			return -1;
+		}
+	}
+
+	public static void main(String[] args) throws IOException{
+		MagicSquare square1 = new MagicSquare(MagicSquare.inputDimension());
+		square1.populateSquare();
+		
+		System.out.println(square1);
+		System.out.println("All row sums are: " + square1.checkRows());
+		System.out.println("All column sums are: " + square1.checkCols());
+		System.out.println("All diagonal sums are: " + square1.checkDiagonals());
 	}
 }
