@@ -55,4 +55,12 @@ public class Person {
 	public String name(){
 		return this.last +" "+ this.first;
 	}
+
+
+	/**
+	 * @param rsvp the rsvp to set
+	 */
+	public void setRsvp(String rsvp) {
+		this.rsvp = rsvp;
+	}
 }
