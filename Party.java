@@ -1,3 +1,7 @@
+/**arnav gupta
+ * Program allows the creation of a Party guest list through parsing of a file and 
+ * allows commands to be run on the guests to view or change various informations. 
+ */
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,9 +12,17 @@ import java.util.StringTokenizer;;
 public class Party {
 	private ArrayList<Person> roster = new ArrayList<Person>();
 	
+	/**
+	 * empty constructor for Party.
+	 */
 	public Party(){	
 	}
 	
+	/**
+	 * parses through GuestList.txt to read in Guests and Guest info.
+	 * Inputs each guest as an object in the ArrayList this.roster 
+	 * @throws IOException
+	 */
 	public void getFile() throws IOException{
 		//BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		
@@ -32,7 +44,11 @@ public class Party {
 		inFile.close();
 	}
 	
-	public void parseLine(String inputLine){
+	/**
+	 * helper function for getFile() that creates each individual object for the ArrayList.
+	 * @param inputLine
+	 */
+	private void parseLine(String inputLine){
 		StringTokenizer st = new StringTokenizer(inputLine);
 		while (st.hasMoreTokens()){
 			String first = st.nextToken();
@@ -46,6 +62,9 @@ public class Party {
 	
 
 	
+	/**
+	 * Uses selection sort to sort the ArrayList this.roster by Last_First
+	 */
 	public void sort(){
 		int minIndex=0;
 		Person temp;
@@ -65,6 +84,10 @@ public class Party {
 
 	}
 	
+	/** Uses binary search to find a person by Last_First
+	 * @param target name of Person as Last_First
+	 * @return index of target Person in this.roster
+	 */
 	public int search(String target){
 		int left = 0;
 		int right = this.roster.size() -1;
@@ -85,13 +108,21 @@ public class Party {
 		
 	}
 	
+	/**
+	 * Prints out a guest by finding it with search() and 
+	 * either printing out the guest or that the guest does not exist.
+	 * @throws IOException
+	 */
 	public void guestInfo() throws IOException{
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		
-		String firstLast = input.readLine();
-		int space = firstLast.indexOf(" ");
+		System.out.print("Enter first name of guest to find: ");
+		String first = input.readLine();
 		
-		int guestIndex = this.search(firstLast.substring(0, space) + firstLast.substring(space+1));
+		System.out.print("Enter last name of guest to find: ");
+		String last = input.readLine();
+		
+		int guestIndex = this.search(last + " " + first);
 		
 		if (guestIndex==-1){
 			System.out.println("Guest is not on list.");
@@ -103,12 +134,18 @@ public class Party {
 		
 	}
 	
+	/**
+	 * Prints out each guest in the roster.
+	 */
 	public void listGuests() {
-		for (Person person : this.roster) {
-			System.out.println(person);
+		for (Person guest : this.roster) {
+			System.out.println(guest);
 		}
 	}
 	
+	/**
+	 * Prints out information on the number of yes, no, and maybe responses.
+	 */
 	public void number(){
 		int yes = 0;
 		int no = 0;
@@ -129,12 +166,19 @@ public class Party {
 		System.out.print(yes + " people are attending the party,\n" + no + " people are not attending the party,\n" + maybe + " people have yet to respond.");	
 	}
 	
+	/**
+	 * Adds a guest alphabetically if they already don't exist,
+	 * else informs the user if they exist.
+	 * @throws IOException
+	 */
 	public void addGuest() throws IOException{
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		
-		System.out.print("Enter name of guest (first last): ");
-		String firstLast = input.readLine();
-		int space = firstLast.indexOf(" ");
+		System.out.print("Enter first name of guest: ");
+		String first = input.readLine();
+		
+		System.out.print("Enter last name of guest: ");
+		String last = input.readLine();
 		
 		System.out.print("Enter name of company: ");
 		String company = input.readLine();
@@ -142,10 +186,17 @@ public class Party {
 		System.out.print("Enter rsvp of yes, no, or maybe: ");
 		String rsvp = input.readLine();
 		
-		int guestIndex = this.search(firstLast.substring(0, space) + firstLast.substring(space+1));
+		int guestIndex = this.search(last + " " + first);
 		
 		if (guestIndex==-1){
-			this.roster.add(new Person(firstLast.substring(0, space), firstLast.substring(space+1), company, rsvp));
+			for (int i=0; i<this.roster.size(); i++){
+				if (this.roster.get(i).name().compareTo(last + " " + first) > 0){
+					this.roster.add(i, new Person(first, last, company, rsvp));
+					System.out.println("Guest has been added.");
+					return;
+				}
+			}
+			this.roster.add(new Person(first, last, company, rsvp));
 			System.out.println("Guest has been added.");
 		}
 		else {
@@ -154,14 +205,22 @@ public class Party {
 		
 	}
 	
+	/**
+	 * changes the rsvp content of a guest by finding the guest
+	 * and set the rsvp.
+	 * @throws IOException
+	 */
 	public void changeRsvp() throws IOException {
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		
-		System.out.print("Enter name of guest (first last) to find colleagues: ");
-		String firstLast = input.readLine();
-		int space = firstLast.indexOf(" ");
+		System.out.print("Enter first name of guest to find: ");
+		String first = input.readLine();
 		
-		int guestIndex = this.search(firstLast.substring(0, space) + firstLast.substring(space+1));
+		System.out.print("Enter last name of guest to find: ");
+		String last = input.readLine();
+		
+		int guestIndex = this.search(last + " " + first);
+		
 		
 		if (guestIndex==-1){
 			System.out.println("Guest does not exist.");
@@ -172,25 +231,36 @@ public class Party {
 			
 			
 			while (!rsvp.equals("yes") || !rsvp.equals("no") || rsvp.equals("?")){
-				if (this.roster.get(guestIndex).getRsvp().equals(rsvp)) {
-					System.out.print("Guest has already Rsvp'ed with " + rsvp);
-				}
-				else {
-					this.roster.get(guestIndex).setRsvp(rsvp);
-					System.out.print("Guest has been changed to " + rsvp);
-				}
+				System.out.print("Enter a correct new rsvp response (yes, no, ?): ");
+				rsvp = input.readLine();
+			}
+		
+			if (this.roster.get(guestIndex).getRsvp().equals(rsvp)) {
+				System.out.print("Guest has already Rsvp'ed with " + rsvp);
+			}
+			else {
+				this.roster.get(guestIndex).setRsvp(rsvp);
+				System.out.print("Guest has been changed to " + rsvp);
+			
 			}
 		}
+		
 	}
 	
+	/**prompts the user for a guest and then prints out
+	 * the colleagues of the guest based on the company.
+	 * @throws IOException
+	 */
 	public void colleagues() throws IOException{
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		
-		System.out.print("Enter name of guest (first last) to find colleagues: ");
-		String firstLast = input.readLine();
-		int space = firstLast.indexOf(" ");
+		System.out.print("Enter first name of guest to find: ");
+		String first = input.readLine();
 		
-		int guestIndex = this.search(firstLast.substring(0, space) + firstLast.substring(space+1));
+		System.out.print("Enter last name of guest to find: ");
+		String last = input.readLine();
+		
+		int guestIndex = this.search(last + " " + first);
 		
 		if (guestIndex==-1){
 			System.out.println("Guest does not exist.");
@@ -198,7 +268,7 @@ public class Party {
 		else {
 			int colleagues = 0;
 			for (Person person : this.roster) {
-				if (!this.roster.get(guestIndex).equals(person))	{
+				if (!this.roster.get(guestIndex).equals(person)){
 					if (this.roster.get(guestIndex).getCompany().equals(person.getCompany())) {
 						colleagues++;
 						System.out.println(person);
@@ -211,10 +281,15 @@ public class Party {
 		}
 	}
 	
+	/**
+	 * error traps given command and loops until correct command is given.
+	 * @return correct command.
+	 * @throws IOException
+	 */
 	public static char errorTrapCommands() throws IOException {
 		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 		
-		System.out.print("Enter G, L, N, A, R, C, or Q as per party commands: ");
+		System.out.print("Enter (G)uest information, (L)ist guests, (N)umber, (A)dd guest, (R)svp change, (C)olleagues print, or (Q)uit as per party commands: ");
 		char c = Character.toUpperCase(input.readLine().charAt(0));
 		
 		while (c != 'G' && c != 'L' && c != 'N' && c != 'A' && c != 'R' && c != 'C' && c != 'Q') {
@@ -224,6 +299,10 @@ public class Party {
 		return c;
 	}
 	
+	/**
+	 * @param args
+	 * @throws IOException
+	 */
 	public void main(String args[]) throws IOException{
 		Party partyCentral = new Party();
 		partyCentral.getFile();
@@ -232,6 +311,7 @@ public class Party {
 		
 		char command = Party.errorTrapCommands();
 		
+		//loops command entry and execution
 		while (command!='Q') {
 			if (command == 'G') {
 				this.guestInfo();
@@ -259,4 +339,3 @@ public class Party {
 	}
 }
 	
-		
