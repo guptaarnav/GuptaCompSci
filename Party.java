@@ -303,7 +303,7 @@ public class Party {
 	 * @param args
 	 * @throws IOException
 	 */
-	public void main(String args[]) throws IOException{
+	public static void main(String args[]) throws IOException{
 		Party partyCentral = new Party();
 		partyCentral.getFile();
 		
@@ -314,22 +314,22 @@ public class Party {
 		//loops command entry and execution
 		while (command!='Q') {
 			if (command == 'G') {
-				this.guestInfo();
+				partyCentral.guestInfo();
 			}
 			else if (command == 'L') {
-				this.listGuests();
+				partyCentral.listGuests();
 			}
 			else if (command == 'N') {
-				this.number();
+				partyCentral.number();
 			}
 			else if (command == 'A') {
-				this.addGuest();
+				partyCentral.addGuest();
 			}
 			else if (command == 'R') {
-				this.changeRsvp();
+				partyCentral.changeRsvp();
 			}
 			else {
-				this.colleagues();
+				partyCentral.colleagues();
 			}
 			command = Party.errorTrapCommands();
 		}
